@@ -13,7 +13,10 @@
       </label>
       <!-- タスク一覧 -->
       <ul class="todo-list">
-        <li class="todo" v-for="todo in filteredTodos" :key="todo.id" :class="{ completed: todo.completed, editing: todo == editedTodo }">
+        <li class="todo" 
+            v-for="todo in filteredTodos" 
+            :key="todo.id" 
+            :class="{ completed: todo.completed, editing: todo == editedTodo }">
           <div class="view">
             <input class="toggle" type="checkbox" v-model="todo.completed" />
             <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
@@ -112,10 +115,9 @@ export default {
   // データ処理用メソッド
   // ※ここではDOM操作しないでください。
   methods: {
-
       // クリックされたリンクに対応するフィルタリングメソッド
-  filterTodos(selectedVisibility) {
-    this.visibility = selectedVisibility;
+  filterTodos(visibility) {
+    this.visibility = visibility;
   },
 
     addTodo() {
