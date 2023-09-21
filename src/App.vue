@@ -13,7 +13,7 @@
       </label>
       <!-- タスク一覧 -->
       <ul class="todo-list">
-        <li class="todo" v-for="todo in todos" :key="todo.id" :class="{ completed: todo.completed, editing: todo == editedTodo }">
+        <li class="todo" v-for="todo in filteredTodos" :key="todo.id" :class="{ completed: todo.completed, editing: todo == editedTodo }">
           <div class="view">
             <input class="toggle" type="checkbox" v-model="todo.completed" />
             <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
@@ -28,20 +28,16 @@
       <!--
         TODO件数、フィルタボタン配置予定個所
       -->   
-        <span class="todo-count">
-          "残り "
-          <strong>2</strong>
-          " 個"
-        </span>
+        <span class="todo-count">残り <strong>{{ remaining }}</strong> 個</span>
         <ul class="filters">
           <li>
-            <a href="#/all" class="selected">すべて</a>
+            <a href="#/all" class="selected" @click="filterTodos('all')">すべて</a>
           </li>
           <li>
-            <a href="#/active" class>実践中</a>
+            <a href="#/active" class @click="filterTodos('active')">実践中</a>
           </li>
           <li>
-            <a href="#/completed" class>完了済み</a>
+            <a href="#/completed" class @click="filterTodos('completed')">完了済</a>
           </li>
         </ul>
       <!---->
@@ -51,6 +47,7 @@
 </template>
 
 <script>
+import todoStorage from '@/storage.js';
 // import todoStorage from '@/storage.js';
 import filters from '@/filters.js';
 import extern from '@/extern.js';
@@ -72,11 +69,31 @@ export default {
       visibility: extern.visibility,
     };
   },
-
-  watch: {
+  created() {
+    // モジュールからデータを読み込む
+    this.todos = todoStorage.fetch();
   },
-
+  watch: {
+    // todosデータが変更されたときに呼び出されるウォッチャー
+    todos: {
+      handler(todos) {
+        // データが変更されたら保存する
+        todoStorage.save(todos);
+      },
+      deep: true, // 寸前に変更された細かいデータ(ネスト)も監視
+    },
+  },
+  // 1.完了してないタスクの数
   computed: {
+    filteredTodos() {
+    if (this.visibility === 'all') {
+      return this.todos; // すべてのタスクを表示
+    } else if (this.visibility === 'completed') {
+      return this.todos.filter(todo => todo.completed); // 完了したタスクのみ表示
+    } else {
+      return this.todos.filter(todo => !todo.completed); // 未完了のタスクのみ表示
+    }
+  },
     remaining() {
       return filters.active(this.todos).length;
     },
@@ -95,6 +112,12 @@ export default {
   // データ処理用メソッド
   // ※ここではDOM操作しないでください。
   methods: {
+
+      // クリックされたリンクに対応するフィルタリングメソッド
+  filterTodos(selectedVisibility) {
+    this.visibility = selectedVisibility;
+  },
+
     addTodo() {
       var value = this.newTodo && this.newTodo.trim();
       if (!value) {
