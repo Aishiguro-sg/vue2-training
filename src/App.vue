@@ -27,7 +27,24 @@
     <footer class="footer" v-show="todos.length" v-cloak>
       <!--
         TODO件数、フィルタボタン配置予定個所
-      -->
+      -->   
+        <span class="todo-count">
+          "残り "
+          <strong>2</strong>
+          " 個"
+        </span>
+        <ul class="filters">
+          <li>
+            <a href="#/all" class="selected">すべて</a>
+          </li>
+          <li>
+            <a href="#/active" class>実践中</a>
+          </li>
+          <li>
+            <a href="#/completed" class>完了済み</a>
+          </li>
+        </ul>
+      <!---->
       <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">完了済みを削除する</button>
     </footer>
   </section>
