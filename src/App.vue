@@ -13,7 +13,7 @@
       </label>
       <!-- タスク一覧 -->
       <ul class="todo-list">
-        <li class="todo" 
+        <li class="todo"
             v-for="todo in filteredTodos" 
             :key="todo.id" 
             :class="{ completed: todo.completed, editing: todo == editedTodo }">
