@@ -51,6 +51,9 @@
           <li>
             <a href="#/completed">完了済</a>
           </li>
+          <li>
+            <a @clike="filterTodos('deleted')">履歴</a>
+          </li>
         </ul>
       <!---->
       <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">完了済みを削除する</button>
@@ -112,11 +115,14 @@ export default {
       return filters.active(this.todos);
 
       // 未完了
-    } else {
+    } else if (this.visibility.value === 'completed')  {
       //return this.todos.filter(todo => !todo.completed);
       return filters.completed(this.todos);
-    }
 
+      //削除
+    } else {
+      return filters.deleted(this.todos);
+    }
   },
 
     remaining() {
@@ -138,7 +144,7 @@ export default {
   // ※ここではDOM操作しないでください。
   methods: {
       // クリックされたリンクに対応するフィルタリングメソッド
-  //filterTodos(a) {this.visibility = a;},
+  filterTodos(deleted) {this.visibility = deleted;},
 
     addTodo() {
       var value = this.newTodo && this.newTodo.trim();
