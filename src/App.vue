@@ -36,17 +36,20 @@
     <footer class="footer" v-show="todos.length" v-cloak>
       <!--
         TODO件数、フィルタボタン配置予定個所   1.完了してないタスクの数
+        class="selected" @click="filterTodos('all')"
+        class @click="filterTodos('active')"
+        class @click="filterTodos('completed')"
       -->   
         <span class="todo-count">残り <strong>{{ remaining }}</strong> 個</span>
         <ul class="filters">
           <li>
-            <a href="#/all" class="selected" @click="filterTodos('all')">すべて</a>
+            <a href="#/all">すべて</a>
           </li>
           <li>
-            <a href="#/active" class @click="filterTodos('active')">実践中</a>
+            <a href="#/active">実践中</a>
           </li>
           <li>
-            <a href="#/completed" class @click="filterTodos('completed')">完了済</a>
+            <a href="#/completed">完了済</a>
           </li>
         </ul>
       <!---->
@@ -99,12 +102,12 @@ export default {
     filteredTodos() {
 
       // すべて
-    if (this.visibility === 'all') {
+    if (this.visibility.value === 'all') {
       //return this.todos; 
       return filters.all(this.todos);
 
        // 完了
-    } else if (this.visibility === 'active') {
+    } else if (this.visibility.value === 'active') {
       //return this.todos.filter(todo => todo.completed);
       return filters.active(this.todos);
 
@@ -135,9 +138,7 @@ export default {
   // ※ここではDOM操作しないでください。
   methods: {
       // クリックされたリンクに対応するフィルタリングメソッド
-  filterTodos(a) {
-    this.visibility = a;
-  },
+  //filterTodos(a) {this.visibility = a;},
 
     addTodo() {
       var value = this.newTodo && this.newTodo.trim();
