@@ -13,7 +13,15 @@ const filters = {
   // 完了したタスクのみを表示する関数
   completed(todos) {
     return todos.filter((todo) => todo.completed);
-  }
+  },
+    // 未完了のタスクのみを表示する関数
+    mark(todos) {
+      return todos.filter((todo) => !todo.completed);
+  },
+  // お気に入り
+  favorite(todos) {
+    return todos.filter((todo) => todo.favorite);
+}
 };
 // 上記の関数をエクスポート
 export default filters;
