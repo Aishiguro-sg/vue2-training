@@ -3,7 +3,9 @@
     <!-- タイトル -->
     <header class="header">
       <h1>todos</h1>
-      <input class="new-todo" autofocus autocomplete="off" placeholder="終わらせたいタスクを入力" v-model="newTodo" @keyup.enter="addTodo"/>
+      <input class="new-todo" autofocus autocomplete="off" 
+             placeholder="終わらせたいタスクを入力" v-model="newTodo" 
+             @keyup.enter="addTodo"/>
     </header>
 
     <main class="main" v-show="todos.length" v-cloak>
@@ -13,6 +15,7 @@
       </label>
       <!-- タスク一覧 -->
       <ul class="todo-list">
+        
         <li class="todo"
             v-for="todo in filteredTodos" 
             :key="todo.id" 
@@ -20,6 +23,10 @@
           <div class="view">
             <input class="toggle" type="checkbox" v-model="todo.completed" />
             <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
+            <!-- お気に入りチェックボックスを追加 -->
+  <input class="favorite" type="checkbox" v-model="todo.favorite" @click="toggleFavorite(todo)" />
+  <button class="destroy" @click="removeTodo(todo)"></button>
+  
             <button class="destroy" @click="removeTodo(todo)"></button>
           </div>
           <input class="edit" 
@@ -52,11 +59,18 @@
             <a href="#/completed">完了済</a>
           </li>
           <li>
-            <a @clike="filterTodos('deleted')">履歴</a>
+            <a href="#/mark">お気に入り</a>
           </li>
         </ul>
       <!---->
-      <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">完了済みを削除する</button>
+      <button class="old" @click="showDeleted"
+              v-show="deletedTodos.length > 0">
+              履歴
+      </button>
+      <button class="clear-completed" @click="removeCompleted" 
+              v-show="todos.length > remaining">
+              完了済み削除
+      </button>
     </footer>
   </section>
 </template>
@@ -82,6 +96,10 @@ export default {
       newTodo: "",
       editedTodo: null,
       visibility: extern.visibility,
+      // 削除したデータの履歴
+      deletedTodos:[],
+      // お気に入り
+    favoriteTodos: []
     };
   },
   //2.呼び出すタイミング・自動保存
@@ -103,31 +121,27 @@ export default {
   computed: {
 
     filteredTodos() {
-
       // すべて
     if (this.visibility.value === 'all') {
       //return this.todos; 
       return filters.all(this.todos);
 
        // 完了
-    } else if (this.visibility.value === 'active') {
-      //return this.todos.filter(todo => todo.completed);
-      return filters.active(this.todos);
-
-      // 未完了
-    } else if (this.visibility.value === 'completed')  {
-      //return this.todos.filter(todo => !todo.completed);
+    }else if (this.visibility.value === 'completed') {
       return filters.completed(this.todos);
-
-      //削除
-    } else {
-      return filters.deleted(this.todos);
+    
+    // お気に入り
+    }else if (this.visibility.value === 'favorite') {
+      return filters.favorite(this.todos);
+    }else{
+      return filters.active(this.todos);
     }
   },
 
     remaining() {
       return filters.active(this.todos).length;
     },
+
     allDone: {
       get() {
         return this.remaining === 0;
@@ -143,9 +157,12 @@ export default {
   // データ処理用メソッド
   // ※ここではDOM操作しないでください。
   methods: {
-      // クリックされたリンクに対応するフィルタリングメソッド
-  filterTodos(deleted) {this.visibility = deleted;},
 
+    filterToday() {
+    // "今日" フィルタを適用
+    this.visibility.value = 'today';
+  },
+  
     addTodo() {
       var value = this.newTodo && this.newTodo.trim();
       if (!value) {
@@ -160,6 +177,9 @@ export default {
     },
 
     removeTodo(todo) {
+      // 削除するデータを履歴リストの末尾に追加
+      this.deletedTodos.push(todo);
+      //idが間違ったもの以外を返す
       this.todos = this.todos.filter((t) => t.id !== todo.id);
     },
 
@@ -185,10 +205,14 @@ export default {
     },
 
     removeCompleted() {
-      this.todos = filters.active(this.todos);
-    }
-  },
+     this.todos = filters.active(this.todos);
+    },
 
+    showDeleted() {
+      // 削除したリストをコンソールに表示
+      console.log(this.deletedTodos);
+    },
+  },
   // a custom directive to wait for the DOM to be updated
   // before focusing on the input field.
   // http://v2.vuejs.org/guide/custom-directive.html

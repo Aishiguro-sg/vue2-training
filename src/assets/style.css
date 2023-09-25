@@ -2,6 +2,22 @@ html,
 body {
 	margin: 0;
 	padding: 0;
+}header
+
+.old{
+	float:right;
+	padding-left: 25px;
+	color: #99CCCC;
+
+}
+.old:hover{
+	opacity: 0.1;
+	color: red;
+}
+.old:active{
+	opacity: 0.8;
+	background-color: red;
+	color: #4d4d4d;
 }
 
 button {
