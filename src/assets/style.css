@@ -5,7 +5,8 @@ body {
 }header
 
 .old{
-	float:right;
+	cursor: pointer;
+	float:l;
 	padding-left: 25px;
 	color: #99CCCC;
 
@@ -298,7 +299,7 @@ font-family: "Comic Sans MS", "Comic Sans";
 
 .todo-list li.completed label {
 	color: #d9d9d9;
-	text-decoration: line-through;
+	text-decoration: rgb(151, 204, 213,0.7) wavy line-through;
 }
 
 .todo-list li .destroy {
@@ -409,6 +410,23 @@ html .clear-completed:active {
 
 .clear-completed:hover {
 	text-decoration: underline;
+}
+
+.old{
+	cursor: pointer;
+	float:l;
+	padding-left: 25px;
+	color: #99CCCC;
+
+}
+.old:hover{
+	opacity: 0.1;
+	color: red;
+}
+.old:active{
+	opacity: 0.8;
+	background-color: red;
+	color: #4d4d4d;
 }
 
 .info {

@@ -10,9 +10,9 @@
 
     <main class="main" v-show="todos.length" v-cloak>
       <!-- タイトル -->
-      <label for="toggle-all">
+      
         <input id="toggle-all" class="toggle-all" type="checkbox" v-model="allDone"/>
-      </label>
+        <label for="toggle-all"></label>
       <!-- タスク一覧 -->
       <ul class="todo-list">
         
@@ -64,8 +64,7 @@
           </li>
         </ul>
       <!---->
-      <button class="old" @click="showDeleted"
-              v-show="deletedTodos.length > 0">
+      <button class="old" @click="showDeleted">
               履歴
       </button>
       <button class="clear-completed" @click="removeCompleted" 
@@ -162,11 +161,12 @@ export default {
   // ※ここではDOM操作しないでください。
   methods: {
 
-    addTodo() {
+    addTodo() { //文字列の前後にある空白文字（スペース、タブ、改行など）を削除する
       var value = this.newTodo && this.newTodo.trim();
       if (!value) {
         return;
       }
+
       this.todos.push({
         id: uniq_id++,
         title: value,
@@ -191,9 +191,6 @@ export default {
   toggleCompleted(todo) {
     todo.favorite = false;
     // 完了済みが選択された場合、お気に入りのチェックボックスを無効にする
-    //if (!this.completed) {
-    //    this.favorite = !this.favorite;
-    // }
   },
 
 
@@ -215,8 +212,11 @@ export default {
       this.editedTodo = null;
       todo.title = this.beforeEditCache;
     },
-
+    
+    //未完了のタスクのみを残す
     removeCompleted() {
+      this.deletedTodos = filters.completed(this.todos);
+      this.deletedTodos=[...this.deletedTodos,...filters.completed()];
      this.todos = filters.active(this.todos);
     },
 
