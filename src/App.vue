@@ -59,7 +59,7 @@
           <li>
             <a href="#/completed">完了済</a>
           </li>
-          <li>
+          <li class="today">
             <a href="#/mark">今日中</a>
           </li>
         </ul>
@@ -100,8 +100,7 @@ export default {
       // 削除したデータの履歴
       deletedTodos:[],
       //お気に入り
-      "todo.active": false,
-      "todo.favorite": false,
+
     };
   },
   //2.呼び出すタイミング・自動保存
@@ -171,7 +170,8 @@ export default {
       this.todos.push({
         id: uniq_id++,
         title: value,
-        completed: false
+        completed: false,
+        favorite:false
       });
       this.newTodo = "";
     },
@@ -182,10 +182,6 @@ export default {
       //idが間違ったもの以外を返す
       this.todos = this.todos.filter((t) => t.id !== todo.id);
     },
-
-
-
-
 
   editTodo(todo) {
     this.beforeEditCache = todo.title;
