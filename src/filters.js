@@ -20,7 +20,7 @@ const filters = {
   },
   // お気に入り
   favorite(todos) {
-    return todos.filter((todo) => todo.favorite);
+    return todos.filter((todo) => todo.favorite && !todo.completed);
 }
 };
 // 上記の関数をエクスポート

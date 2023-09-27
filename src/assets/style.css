@@ -84,13 +84,14 @@ body {
 }
 
 .todoapp h1 {
+	font-family: "Comic Sans MS", "Comic Sans";
 	position: absolute;
 	top: -155px;
 	width: 100%;
 	font-size: 100px;
 	font-weight: 100;
 	text-align: center;
-	color: rgba(175, 47, 47, 0.15);
+	color: rgb(167, 231, 230,0.8);
 	-webkit-text-rendering: optimizeLegibility;
 	-moz-text-rendering: optimizeLegibility;
 	text-rendering: optimizeLegibility;
@@ -209,6 +210,13 @@ body {
 .todo-list li .toggle {
 	opacity: 0;
 }
+/*
+favorite
+*/
+.favorite{
+color: #af5b5e;
+}
+
 
 .todo-list li .toggle + label {
 	/*
@@ -247,7 +255,7 @@ body {
 	height: 40px;
 	margin: auto 0;
 	font-size: 30px;
-	color: #cc9a9a;
+	color: #9bcdc7;
 	margin-bottom: 11px;
 	transition: color 0.2s ease-out;
 }
@@ -393,3 +401,5 @@ html .clear-completed:active {
 		bottom: 10px;
 	}
 }
+
+

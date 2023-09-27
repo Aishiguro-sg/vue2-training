@@ -21,12 +21,13 @@
             :key="todo.id" 
             :class="{ completed: todo.completed, editing: todo == editedTodo }">
           <div class="view">
-            <input class="toggle" type="checkbox" v-model="todo.completed" />
+             <!-- 完了済み チェックボックスを追加 -->
+            <input class="toggle" type="checkbox" v-model="todo.completed" @change="toggleCompleted(todo)" />
             <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
-            <!-- お気に入りチェックボックスを追加 -->
-  <input class="favorite" type="checkbox" v-model="todo.favorite" @click="toggleFavorite(todo)" />
-  <button class="destroy" @click="removeTodo(todo)"></button>
-  
+
+            <!-- お気に入り チェックボックスを追加 -->
+            <input v-if="!todo.completed" class="favorite" type="checkbox" v-model="todo.favorite"/>
+
             <button class="destroy" @click="removeTodo(todo)"></button>
           </div>
           <input class="edit" 
@@ -50,7 +51,7 @@
         <span class="todo-count">残り <strong>{{ remaining }}</strong> 個</span>
         <ul class="filters">
           <li>
-            <a href="#/all">すべて</a>
+            <a href="#/all">全て</a>
           </li>
           <li>
             <a href="#/active">実践中</a>
@@ -59,7 +60,7 @@
             <a href="#/completed">完了済</a>
           </li>
           <li>
-            <a href="#/mark">お気に入り</a>
+            <a href="#/mark">今日中</a>
           </li>
         </ul>
       <!---->
@@ -98,8 +99,9 @@ export default {
       visibility: extern.visibility,
       // 削除したデータの履歴
       deletedTodos:[],
-      // お気に入り
-    favoriteTodos: []
+      //お気に入り
+      "todo.active": false,
+      "todo.favorite": false,
     };
   },
   //2.呼び出すタイミング・自動保存
@@ -126,15 +128,18 @@ export default {
       //return this.todos; 
       return filters.all(this.todos);
 
+      // 未完了
+    }else if (this.visibility.value === 'active') {
+      return filters.active(this.todos);
+      
+
        // 完了
     }else if (this.visibility.value === 'completed') {
       return filters.completed(this.todos);
     
     // お気に入り
-    }else if (this.visibility.value === 'favorite') {
-      return filters.favorite(this.todos);
     }else{
-      return filters.active(this.todos);
+      return filters.favorite(this.todos);
     }
   },
 
@@ -158,11 +163,6 @@ export default {
   // ※ここではDOM操作しないでください。
   methods: {
 
-    filterToday() {
-    // "今日" フィルタを適用
-    this.visibility.value = 'today';
-  },
-  
     addTodo() {
       var value = this.newTodo && this.newTodo.trim();
       if (!value) {
@@ -183,10 +183,26 @@ export default {
       this.todos = this.todos.filter((t) => t.id !== todo.id);
     },
 
-    editTodo(todo) {
-      this.beforeEditCache = todo.title;
-      this.editedTodo = todo;
-    },
+
+
+
+
+  editTodo(todo) {
+    this.beforeEditCache = todo.title;
+    this.editedTodo = todo;
+  },
+
+  toggleCompleted(todo) {
+    todo.favorite = false;
+    // 完了済みが選択された場合、お気に入りのチェックボックスを無効にする
+    //if (!this.completed) {
+    //    this.favorite = !this.favorite;
+    // }
+  },
+
+
+
+
 
     doneEdit(todo) {
       if (!this.editedTodo) {
@@ -212,6 +228,7 @@ export default {
       // 削除したリストをコンソールに表示
       console.log(this.deletedTodos);
     },
+    
   },
   // a custom directive to wait for the DOM to be updated
   // before focusing on the input field.
